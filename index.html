@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reportes Diarios | Sistema Avanzado con Supabase</title>
+    <title>Reportes Diarios | Sistema Conectado</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -49,7 +49,6 @@
             margin: 0 auto;
         }
         
-        /* Header con efecto de partículas */
         header {
             text-align: center;
             margin-bottom: 50px;
@@ -64,27 +63,13 @@
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
         
-        .particles {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-        }
-        
-        .particle {
-            position: absolute;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 50%;
-            animation: float 15s infinite linear;
-        }
-        
-        @keyframes float {
-            0% { transform: translateY(0) rotate(0deg); opacity: 0; }
-            10% { opacity: 1; }
-            90% { opacity: 1; }
-            100% { transform: translateY(-1000%) rotate(360deg); opacity: 0; }
+        .connection-panel {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: 12px;
+            padding: 15px;
+            margin-top: 20px;
+            display: inline-block;
         }
         
         h1 {
@@ -94,7 +79,6 @@
             background: linear-gradient(135deg, var(--primary-light) 0%, var(--accent) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            position: relative;
         }
         
         .subtitle {
@@ -124,6 +108,12 @@
             border: 1px solid rgba(239, 68, 68, 0.3);
         }
         
+        .connection-status.connecting {
+            background: rgba(245, 158, 11, 0.2);
+            color: var(--warning);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+        }
+        
         .main-content {
             display: grid;
             grid-template-columns: 1fr 1.3fr;
@@ -136,7 +126,6 @@
             }
         }
         
-        /* Contenedores de formulario y vista previa */
         .form-container, .preview-container {
             background: rgba(30, 41, 59, 0.7);
             border-radius: 24px;
@@ -233,7 +222,6 @@
             resize: vertical;
         }
         
-        /* Botones mejorados */
         .btn {
             display: inline-flex;
             align-items: center;
@@ -248,44 +236,19 @@
             cursor: pointer;
             transition: all 0.3s;
             text-align: center;
-            position: relative;
-            overflow: hidden;
         }
         
-        .btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-            transition: left 0.5s;
-        }
-        
-        .btn:hover::before {
-            left: 100%;
-        }
-        
-        .btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 30px rgba(99, 102, 241, 0.4);
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
         }
         
         .btn-success {
             background: linear-gradient(135deg, var(--success) 0%, var(--success-dark) 100%);
         }
         
-        .btn-success:hover {
-            box-shadow: 0 15px 30px rgba(16, 185, 129, 0.4);
-        }
-        
         .btn-danger {
             background: linear-gradient(135deg, var(--danger) 0%, #DC2626 100%);
-        }
-        
-        .btn-danger:hover {
-            box-shadow: 0 15px 30px rgba(239, 68, 68, 0.4);
         }
         
         .btn-outline {
@@ -294,18 +257,12 @@
             color: var(--primary);
         }
         
-        .btn-outline:hover {
-            background: var(--primary);
-            color: white;
-        }
-        
         .btn-group {
             display: flex;
             gap: 15px;
             margin-top: 30px;
         }
         
-        /* Lista de tickets mejorada */
         .ticket-list {
             margin-top: 20px;
             max-height: 550px;
@@ -444,7 +401,6 @@
             font-size: 1rem;
         }
         
-        /* Estadísticas mejoradas */
         .stats {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -509,7 +465,6 @@
             padding: 25px;
         }
         
-        /* Notificación mejorada */
         .notification {
             position: fixed;
             top: 30px;
@@ -547,7 +502,6 @@
             color: var(--danger);
         }
         
-        /* Botón flotante mejorado */
         .floating-btn {
             position: fixed;
             bottom: 30px;
@@ -573,7 +527,6 @@
             box-shadow: 0 15px 30px rgba(99, 102, 241, 0.6);
         }
         
-        /* Encabezado de vista previa */
         .preview-header {
             display: flex;
             justify-content: space-between;
@@ -652,7 +605,6 @@
             color: var(--danger);
         }
         
-        /* Efectos de carga */
         .loading {
             display: inline-block;
             width: 20px;
@@ -667,7 +619,6 @@
             to { transform: rotate(360deg); }
         }
         
-        /* Responsive */
         @media (max-width: 768px) {
             .main-content {
                 gap: 25px;
@@ -704,12 +655,16 @@
 <body>
     <div class="container">
         <header>
-            <div class="particles" id="particles"></div>
             <h1><i class="fas fa-rocket"></i> Sistema de Reportes Diarios</h1>
             <p class="subtitle">Gestiona y organiza tus tickets con nuestra plataforma avanzada de reportes</p>
-            <div class="connection-status" id="connectionStatus">
-                <i class="fas fa-circle"></i>
-                <span>Conectando a Supabase...</span>
+            <div class="connection-panel">
+                <div class="connection-status" id="connectionStatus">
+                    <i class="fas fa-circle"></i>
+                    <span>Conectando a Supabase...</span>
+                </div>
+                <div style="margin-top: 10px; font-size: 0.8rem; opacity: 0.8;">
+                    <i class="fas fa-database"></i> Base de datos: Conectada
+                </div>
             </div>
         </header>
         
@@ -822,9 +777,9 @@
     </div>
 
     <script>
-        // Configuración de Supabase - REEMPLAZA CON TUS PROPIAS CREDENCIALES
-        const SUPABASE_URL = 'https://tu-proyecto.supabase.co';
-        const SUPABASE_ANON_KEY = 'tu-anon-key';
+        // Configuración de Supabase - TUS CREDENCIALES
+        const SUPABASE_URL = 'https://vqscbhcdmhukxuigrvuy.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZxc2NiaGNkbWh1a3h1aWdydnV5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM4MzQ2MTcsImV4cCI6MjA3OTQxMDYxN30.t2wvQNAV0xz4KlSDHb2ciWyFhDsrFndebCxmbWgB0DU';
         
         // Inicializar Supabase
         const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -843,7 +798,6 @@
         const scrollTopBtn = document.getElementById('scrollTop');
         const searchInput = document.getElementById('searchInput');
         const filterBtns = document.querySelectorAll('.filter-btn');
-        const particlesContainer = document.getElementById('particles');
         const connectionStatus = document.getElementById('connectionStatus');
         
         // Elementos de estadísticas
@@ -851,31 +805,9 @@
         const highPriorityEl = document.getElementById('highPriority');
         const todayTicketsEl = document.getElementById('todayTickets');
         
-        // Crear partículas para el fondo
-        function createParticles() {
-            for (let i = 0; i < 50; i++) {
-                const particle = document.createElement('div');
-                particle.classList.add('particle');
-                
-                // Tamaño aleatorio
-                const size = Math.random() * 10 + 2;
-                particle.style.width = `${size}px`;
-                particle.style.height = `${size}px`;
-                
-                // Posición aleatoria
-                particle.style.left = `${Math.random() * 100}%`;
-                particle.style.top = `${Math.random() * 100}%`;
-                
-                // Retraso de animación aleatorio
-                particle.style.animationDelay = `${Math.random() * 15}s`;
-                
-                particlesContainer.appendChild(particle);
-            }
-        }
-        
         // Inicializar la aplicación
         document.addEventListener('DOMContentLoaded', async function() {
-            createParticles();
+            console.log('Iniciando aplicación...');
             
             // Probar conexión con Supabase
             await testSupabaseConnection();
@@ -900,7 +832,6 @@
                 });
             });
             
-            // Mostrar botón de scroll al hacer scroll
             window.addEventListener('scroll', function() {
                 if (window.pageYOffset > 300) {
                     scrollTopBtn.style.display = 'flex';
@@ -913,39 +844,56 @@
         // Probar conexión con Supabase
         async function testSupabaseConnection() {
             try {
+                connectionStatus.innerHTML = '<i class="fas fa-circle"></i><span>Conectando a Supabase...</span>';
+                connectionStatus.className = 'connection-status connecting';
+                
+                console.log('Probando conexión con Supabase...');
+                
                 const { data, error } = await supabase
                     .from('tickets')
                     .select('id')
                     .limit(1);
                 
-                if (error) throw error;
+                if (error) {
+                    console.error('Error de Supabase:', error);
+                    throw error;
+                }
                 
+                console.log('Conexión exitosa a Supabase');
                 connectionStatus.innerHTML = '<i class="fas fa-circle"></i><span>Conectado a Supabase</span>';
-                connectionStatus.classList.remove('offline');
+                connectionStatus.className = 'connection-status';
+                
             } catch (error) {
                 console.error('Error conectando a Supabase:', error);
                 connectionStatus.innerHTML = '<i class="fas fa-circle"></i><span>Error de conexión</span>';
-                connectionStatus.classList.add('offline');
-                showNotification('Error conectando a la base de datos', 'error');
+                connectionStatus.className = 'connection-status offline';
+                showNotification('Error conectando a la base de datos: ' + error.message, 'error');
             }
         }
         
         // Cargar tickets desde Supabase
         async function loadTicketsFromSupabase() {
             try {
+                console.log('Cargando tickets desde Supabase...');
+                
                 const { data, error } = await supabase
                     .from('tickets')
                     .select('*')
                     .order('created_at', { ascending: false });
                 
-                if (error) throw error;
+                if (error) {
+                    console.error('Error cargando tickets:', error);
+                    throw error;
+                }
                 
                 tickets = data || [];
+                console.log('Tickets cargados:', tickets.length);
                 renderTickets();
                 updateStats();
+                
             } catch (error) {
                 console.error('Error cargando tickets:', error);
-                showNotification('Error cargando los reportes', 'error');
+                showNotification('Error cargando los reportes: ' + error.message, 'error');
             }
         }
         
@@ -958,14 +906,14 @@
             const priority = document.getElementById('ticketPriority').value;
             const description = document.getElementById('ticketDescription').value;
             
-            // Mostrar estado de carga
             const submitBtn = ticketForm.querySelector('button[type="submit"]');
             const originalText = submitBtn.innerHTML;
             submitBtn.innerHTML = '<div class="loading"></div> Guardando...';
             submitBtn.disabled = true;
             
             try {
-                // Insertar en Supabase
+                console.log('Guardando nuevo ticket...');
+                
                 const { data, error } = await supabase
                     .from('tickets')
                     .insert([
@@ -979,9 +927,11 @@
                     ])
                     .select();
                 
-                if (error) throw error;
+                if (error) {
+                    console.error('Error guardando ticket:', error);
+                    throw error;
+                }
                 
-                // Agregar a la lista local
                 if (data && data.length > 0) {
                     const newTicket = data[0];
                     tickets.unshift(newTicket);
@@ -989,12 +939,12 @@
                     updateStats();
                     clearForm();
                     showNotification('¡Reporte guardado correctamente!', 'success');
+                    console.log('Ticket guardado con ID:', newTicket.id);
                 }
             } catch (error) {
                 console.error('Error guardando ticket:', error);
-                showNotification('Error guardando el reporte', 'error');
+                showNotification('Error guardando el reporte: ' + error.message, 'error');
             } finally {
-                // Restaurar botón
                 submitBtn.innerHTML = originalText;
                 submitBtn.disabled = false;
             }
@@ -1044,7 +994,6 @@
                 ticketList.appendChild(ticketItem);
             });
             
-            // Agregar event listeners a los botones de eliminar
             document.querySelectorAll('.action-btn.delete').forEach(btn => {
                 btn.addEventListener('click', function() {
                     const ticketId = this.getAttribute('data-id');
@@ -1064,14 +1013,13 @@
                     
                     if (error) throw error;
                     
-                    // Eliminar de la lista local
                     tickets = tickets.filter(ticket => ticket.id !== id);
                     renderTickets();
                     updateStats();
                     showNotification('Reporte eliminado correctamente', 'error');
                 } catch (error) {
                     console.error('Error eliminando ticket:', error);
-                    showNotification('Error eliminando el reporte', 'error');
+                    showNotification('Error eliminando el reporte: ' + error.message, 'error');
                 }
             }
         }
@@ -1081,7 +1029,6 @@
             let filteredTickets = [...tickets];
             const searchTerm = searchInput.value.toLowerCase();
             
-            // Aplicar filtro de búsqueda
             if (searchTerm) {
                 filteredTickets = filteredTickets.filter(ticket => 
                     ticket.title.toLowerCase().includes(searchTerm) || 
@@ -1090,7 +1037,6 @@
                 );
             }
             
-            // Aplicar filtro de prioridad/fecha
             const today = new Date().toLocaleDateString('es-ES');
             const oneWeekAgo = new Date();
             oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
@@ -1139,13 +1085,11 @@
                 return;
             }
             
-            // Mostrar estado de carga
             const originalText = exportExcelBtn.innerHTML;
             exportExcelBtn.innerHTML = '<div class="loading"></div> Generando...';
             exportExcelBtn.disabled = true;
             
             try {
-                // Preparar datos para Excel
                 const data = tickets.map(ticket => ({
                     'ID': ticket.id,
                     'Título': ticket.title,
@@ -1156,18 +1100,15 @@
                     'Fecha': new Date(ticket.created_at).toLocaleDateString('es-ES')
                 }));
                 
-                // Crear libro de trabajo
                 const wb = XLSX.utils.book_new();
                 const ws = XLSX.utils.json_to_sheet(data);
                 
-                // Estilos para Excel (colores y formato)
                 const headerStyle = {
                     font: { bold: true, color: { rgb: "FFFFFF" } },
                     fill: { fgColor: { rgb: "6366F1" } },
                     alignment: { horizontal: "center" }
                 };
                 
-                // Aplicar estilos a los encabezados
                 const range = XLSX.utils.decode_range(ws['!ref']);
                 for (let C = range.s.c; C <= range.e.c; ++C) {
                     const address = XLSX.utils.encode_cell({ r: 0, c: C });
@@ -1175,22 +1116,19 @@
                     ws[address].s = headerStyle;
                 }
                 
-                // Ajustar el ancho de las columnas
                 const colWidths = [
-                    { wch: 10 }, // ID
-                    { wch: 30 }, // Título
-                    { wch: 20 }, // Categoría
-                    { wch: 15 }, // Prioridad
-                    { wch: 50 }, // Descripción
-                    { wch: 15 }, // Estado
-                    { wch: 12 }  // Fecha
+                    { wch: 10 },
+                    { wch: 30 },
+                    { wch: 20 },
+                    { wch: 15 },
+                    { wch: 50 },
+                    { wch: 15 },
+                    { wch: 12 }
                 ];
                 ws['!cols'] = colWidths;
                 
-                // Agregar hoja al libro
                 XLSX.utils.book_append_sheet(wb, ws, "Reportes Diarios");
                 
-                // Generar archivo y descargar
                 const fileName = `Reportes_Diarios_${new Date().toISOString().split('T')[0]}.xlsx`;
                 XLSX.writeFile(wb, fileName);
                 
@@ -1199,7 +1137,6 @@
                 console.error('Error exportando a Excel:', error);
                 showNotification('Error generando el archivo Excel', 'error');
             } finally {
-                // Restaurar botón
                 exportExcelBtn.innerHTML = originalText;
                 exportExcelBtn.disabled = false;
             }
@@ -1214,29 +1151,25 @@
             
             if (confirm('¿Estás seguro de que deseas eliminar todos los reportes? Esta acción no se puede deshacer.')) {
                 try {
-                    // Mostrar estado de carga
                     const originalText = clearAllBtn.innerHTML;
                     clearAllBtn.innerHTML = '<div class="loading"></div> Eliminando...';
                     clearAllBtn.disabled = true;
                     
-                    // Eliminar todos los tickets de Supabase
                     const { error } = await supabase
                         .from('tickets')
                         .delete()
-                        .neq('id', 0); // Esto eliminará todos los registros
+                        .neq('id', 0);
                     
                     if (error) throw error;
                     
-                    // Limpiar lista local
                     tickets = [];
                     renderTickets();
                     updateStats();
                     showNotification('Todos los reportes han sido eliminados', 'error');
                 } catch (error) {
                     console.error('Error eliminando tickets:', error);
-                    showNotification('Error eliminando los reportes', 'error');
+                    showNotification('Error eliminando los reportes: ' + error.message, 'error');
                 } finally {
-                    // Restaurar botón
                     clearAllBtn.innerHTML = originalText;
                     clearAllBtn.disabled = false;
                 }
@@ -1246,7 +1179,7 @@
         // Mostrar notificación
         function showNotification(message, type = 'success') {
             const notification = document.getElementById('notification');
-            notification.querySelector('strong').textContent = type === 'success' ? '¡Éxito!' : 'Eliminado';
+            notification.querySelector('strong').textContent = type === 'success' ? '¡Éxito!' : 'Error';
             notification.querySelector('p').textContent = message;
             
             if (type === 'error') {
